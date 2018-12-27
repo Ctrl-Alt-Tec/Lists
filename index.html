@@ -3,7 +3,7 @@
     
     
     <script src="https://www.gstatic.com/firebasejs/5.7.0/firebase.js"></script>
-    <title>CTRL+ALT+TEC Bank</title>
+    <title>CTRL+ALT+TEC Lists</title>
     <meta name="viewport" content="width=device-width, initial-scale=0.75">
     <script src="https://www.gstatic.com/firebasejs/5.4.2/firebase.js"></script>
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons"
@@ -91,9 +91,11 @@
         flex: 1;
         justify-content: space-between;
         width: 100%;
-        max-width: 658px;
+        /*max-width: 658px; --this is an exception */
+        padding: 8px; /* --this is an exception*/
+        margin: 0px; /* --this is an exception*/
+        margin-left: 8px; /* --this is an exception*/
         box-sizing: border-box;
-        padding: 0px;
         color: white
       }
       .header-toolbar-button{
@@ -204,7 +206,7 @@
         color: white;
         width: 100%;
         box-sizing: border-box;
-        text-align: right
+        text-align: left
       }
       h2{
         font-family: 'Source Sans Pro', sans-serif;
@@ -319,6 +321,48 @@
         text-align: right
       }
 
+      .task{
+        display: flex;
+        flex-direction: row;
+        padding: 4px;
+        width: 100%;
+        max-width: 1020px;
+        align-items: center;
+        flex-wrap: wrap;
+        font-family: 'Source Sans Pro', sans-serif;
+        border-bottom: 1px solid rgb(160,160,160)
+
+      }
+      .task>*{
+        padding: 8px;
+      }
+      .task .task-status .material-icons {
+        font-size: 32px
+      }
+      .task .task-content{
+        font-size: 24px;
+        padding: 8px;
+        padding-left: 16px;
+        font-weight: 600
+      }
+      .task .task-content .task-content_LIST{
+        font-weight: 800;
+        color: rgb(160,160,160)
+      }
+      .task .task-meta{
+        width: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding-top: 0px !important
+      }
+      .task .task-meta > * {
+        display: flex;
+        align-items: center;
+        font-size: 18px;
+        white-space: pre
+      }
+
       .input-text{
         display: flex;
         width: -webkit-fill-available;
@@ -405,19 +449,40 @@
       </div>
       <div class="header-toolbar">
         <div class="header-toolbar-button link_app-tab_public"><i class="material-icons">menu</i></div>
-        <div class="header-toolbar-button"><i class="material-icons">info</i></div>
-        <div class="header-toolbar-button link_app-tab_balance"><i class="material-icons">account_circle</i> usuario</div>
+        <h1>MARKETING</h1>
       </div>
     </div>
     
     <div class="app  app-tab_public">
-        <div class="app-toolbar">
-          <h1>TRANSFERENCIAS</h1>
-        </div>
-        <div class="app-section allTransfers">
-            <div class="card transfer"><div class="emphasis-sub">$20</div><div class="transfer-details"><h3>a01023646@itesm.mx</h3><i class="material-icons">arrow_forward</i><h3>a01024232</h3></div></div>
-        </div>
         
+        <div class="app-section allTransfers">
+          
+          <div class="task">
+            <i class="material-icons task-status">check_box</i>
+            <div class="task-content">
+              <div class="task-content_LIST">MARKETING</div>
+              <div class="task-content_CONTENT">Imprimir anuncios</div>
+            </div>
+            <div class="task-meta">
+              <span class="task-meta_COMMENTS"><i class="material-icons">check</i> 29</span>
+              <span class="task-meta_COMPLETIONS"><i class="material-icons">check</i> 29</span>
+              <span class="task-meta_DATE"><i class="material-icons">calendar_today</i> 29</span>
+            </div>
+          </div>
+          <div class="task">
+            <i class="material-icons task-status">check_box</i>
+            <div class="task-content">
+              <div class="task-content_LIST">MARKETING</div>
+              <div class="task-content_CONTENT">Imprimir anuncios</div>
+            </div>
+            <div class="task-meta">
+              <span class="task-meta_COMMENTS"><i class="material-icons">check</i> 29</span>
+              <span class="task-meta_COMPLETIONS"><i class="material-icons">check</i> 29</span>
+              <span class="task-meta_DATE"><i class="material-icons">calendar_today</i> 29</span>
+            </div>
+          </div>
+          
+        </div>
     </div>
     <div class="fab">
         <i class="material-icons" style="font-size: 64px;">add</i>
