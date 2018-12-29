@@ -484,8 +484,7 @@
           document.querySelector(".allGroups").innerHTML=""
           data.forEach(function(doc){
             var groupElement = document.createElement("div");
-            groupElement.classList.add("card");
-
+            groupElement.classList.add("card", "group");
             var groupTitle = document.createElement("div");
             groupTitle.classList.add("group_TITLE")
             groupTitle.innerText = doc.data()['NAME'];
@@ -494,6 +493,9 @@
             groupDescription.innerText = doc.data()['DESCRIPTION'];
 
             groupElement.append(groupTitle, groupDescription)
+            groupElement.addEventListener("click", function(){
+              window.location.replace("group.html")
+            })
             document.querySelector(".allGroups").append(groupElement)
           })
         })
