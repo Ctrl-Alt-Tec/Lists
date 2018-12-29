@@ -340,104 +340,7 @@
         text-align: right
       }
 
-      .task{
-        display: flex;
-        flex-direction: row;
-        padding: 4px;
-        width: 100%;
-        max-width: 1020px;
-        align-items: center;
-        flex-wrap: wrap;
-        font-family: 'Source Sans Pro', sans-serif;
-        border-bottom: 1px solid rgb(160,160,160);
-        box-sizing: border-box
-      }
-      .task.task-compact{
-        border: none;
-      }
-      .task>*{
-        padding: 8px;
-      }
-      .task .task-status.material-icons {
-        font-size: 32px;
-        margin-right: 8px; 
-      }
-      .task .task-content{
-        font-size: 24px;
-        padding: 8px;
-        padding-left: 16px;
-        font-weight: 600
-      }
-      .task .task-content .task-content_LIST{
-        font-weight: 800;
-        color: rgb(160,160,160)
-      }
-      .task .task-meta{
-        width: 100%;
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        padding-top: 0px !important
-      }
-      .task .task-meta > * {
-        display: flex;
-        align-items: center;
-        font-size: 18px;
-        white-space: pre
-      }
-      .modal-task{
-        max-height: 100%;
-      }
-      .modal-task .modal-content{
-        display: flex;
-        flex-direction: column;
-        flex-shrink: 5
-      }
-      .modal-task_COMPLETED{
-        padding: 8px;
-        display: flex;
-        flex-direction: row;
-        overflow-x: auto;
-        border-bottom: 1px solid rgb(200,200,200); 
-      }
-      .modal-task_COMPLETED * {
-        margin: 4px;
-        padding: 8px;
-        font-family: 'Source Sans Pro';
-        font-size: 18px;
-        border-radius: 16px;
-        background-color: rgb(200,200,200);
-      }
-      .modal-task_COMMENTS {
-        padding: 0px;
-        display: flex;
-        flex-direction: column;
-        overflow-y: auto;
-        flex-shrink: 5
-      }
-      .modal-task_COMMENTS_item{
-        margin: 8px;
-        padding: 8px;
-        background-color: rgb(240,240,240);
-        border-radius: 16px;
-        font-family: 'Source Sans Pro', sans-serif;
-        width: auto;
-        max-width: 80%;
-        font-size: 24px;
-      }
-      .modal-task_COMMENTS_item-author{
-        font-size: 16px;
-        font-weight: 600;
-        color: rgb(160,160,160);
-        flex: 1
-      }
-      .modal-task_TOOLBAR{
-        display: flex;
-        flex-direction: row;
-        padding-top: 8px;
-        margin-top: 8px;
-        border-top: 1px solid rgb(160,160,160);
-      }
+      
 
       .input-text{
         display: flex;
@@ -524,70 +427,21 @@
         <a href="http://ctrl-alt-tec.github.io/Website" style="margin-right: 8px"><img src='https://ctrl-alt-tec.github.io/Website/img/LOGO-INLINE.png' height="48px"/></a>
         <img class="logo" src="logo.png">
       </div>
-      <div class="header-toolbar">
-        <div class="header-toolbar-button link_app-tab_public"><i class="material-icons">menu</i></div>
-        <h1 class="_group-TITLE">MARKETING</h1>
-      </div>
+      
     </div>
     
-    <div class="app modal-isopen">
+    <div class="app">
         <div class="app-toolbar">
           <div class="group-description _group-DESCRIPTION"></div>
         </div>
-        <div class="app-section allTasks">
+        <div class="app-section allGroups">
           
-          <div class="task">
-            <i class="material-icons task-status">check_box</i>
-            <div class="task-content">
-              <div class="task-content_LIST">MARKETING</div>
-              <div class="task-content_CONTENT">Imprimir anuncios</div>
-            </div>
-            <div class="task-meta">
-              <span class="task-meta_COMMENTS"><i class="material-icons">check</i> 29</span>
-              <span class="task-meta_COMPLETIONS"><i class="material-icons">check</i> 29</span>
-              <span class="task-meta_DATE"><i class="material-icons">calendar_today</i> 29</span>
-            </div>
-          </div>
-          <div class="task">
-            <i class="material-icons task-status">check_box</i>
-            <div class="task-content">
-              <div class="task-content_LIST">MARKETING</div>
-              <div class="task-content_CONTENT">Imprimir anuncios</div>
-            </div>
-            <div class="task-meta">
-              <span class="task-meta_COMMENTS"><i class="material-icons">check</i> 29</span>
-              <span class="task-meta_COMPLETIONS"><i class="material-icons">check</i> 29</span>
-              <span class="task-meta_DATE"><i class="material-icons">calendar_today</i> 29</span>
-            </div>
-          </div>
-          
+                   
         </div>
     </div>
 
-    <div class="modal">
-      <h1 class="app-title">NUEVA TRANSFERENCIA</h1>
-      <form style="padding: 0px 8px">
-        <h3 style="margin: 0px 8px">A la orden de</h3>
-        <input type="text" class="input-text input_TARGET" placeholder="A0102XXXX" required="required" style="font-size: 24px">
-        <h3 style="margin: 0px 8px; margin-top: 32px">Concepto:</h3>
-        <input type="text" class="input-text input_CONCEPT" placeholder="Pago de materiales" required="required" style="font-size: 24px">
-        
-        <input type="number" class="input-text transparent emphasis-main input_QUANTITY" placeholder="$00" style="text-align: right" min="1">
-        <hr class="line-break bottom-space top-space" style="margin: auto 8px; width: auto">
-        <div class="input-button-group">
-          <input type="button" value="cancelar" class="button_hideModalDialog">  
-          <input type="button" value="enviar" style="background: rgb(0,122,255); color: white" class="button_submitTransfer">   
-        </div>
-
-      </form>
-    </div>
-    <div class="modal modal-task">
-      <div class="modal-header">
-        <span class="modal-header-title">DETALLES</span>
-        <i class="material-icons modal-header-close">close</i>
-      </div>
-      <div class="modal-content"></div>
-    </div>
+    
+   
 
     <div class="fab">
         <i class="material-icons" style="font-size: 64px;">add</i>
@@ -596,7 +450,7 @@
     
     
     <script>
-
+      var URLGroupID = "SAMPLE";
         // Initialize Firebase
       var config = {
         apiKey: "AIzaSyDlqcRMOR7P4PeKnnY3-6OEjMHZ2xnG3bc",
@@ -612,210 +466,29 @@
         if(!user){
           window.location = "login.html"
         }else{
-          getGroupData("SAMPLE")
+          getGroups()
         }
       })
-      showModalDialog(".modal-task");
-      document.querySelector(".app.modal-isopen").addEventListener("click", function(e){
-        hideModalDialog();
-        e.stopImmediatePropagation();
-      });
-      document.querySelector(".button_hideModalDialog").addEventListener("click", hideModalDialog);
-
-      function getGroupData(groupID){
-        firebase.firestore().collection("listsGroups").doc(groupID).onSnapshot(function(doc){
-          if(doc.data()['MEMBERS'].includes(firebase.auth().currentUser.email)){
-            document.querySelector(".allTasks").innerHTML = "";
-            document.querySelector("._group-TITLE").innerHTML = doc.data()['NAME'];
-            document.querySelector("._group-DESCRIPTION").innerHTML = doc.data()['DESCRIPTION'];
-            doc.ref.collection("TASKS").get().then(function(taskData){
-              taskData.forEach(function(taskDoc){
-                document.querySelector(".allTasks").append(returnTaskElement(taskDoc, doc.data()['NAME']))
-              })
-            })
-          } else {
-            returnJoinPrompt();            
-          }
-        })
-      }
       
+      function getGroups(){
+        firebase.firestore().collection("listsGroups").where("MEMBERS", "array-contains", firebase.auth().currentUser.email).onSnapshot(function(data){
+          document.querySelector(".allGroups").innerHTML=""
+          data.forEach(function(doc){
+            var groupElement = document.createElement("div");
+            groupElement.classList.add("card");
 
-      function addCommentToTask(refTask){
-        var newComment = document.querySelector("._input-newComment").value;
-        firebase.firestore().doc(refTask).collection("COMMENTS").doc().set({
-          CONTENT: newComment,
-          AUTHOR: firebase.auth().currentUser.email,
-          TYPE: 'COMMENT',
-          DATE: new Date(),
-        });
-        document.querySelector("._input-newComment").value = ""
-      }
+            var groupTitle = document.createElement("div");
+            groupTitle.classList.add("group_TITLE")
+            groupTitle.innerText = doc.data()['NAME'];
+            var groupDescription = document.createElement("div");
+            groupDescription.classList.add("groupDescription")
+            groupDescription.innerText = doc.data()['DESCRIPTION'];
 
-      function returnJoinPrompt(){
-        var messageSad = document.createElement("div");
-        messageSad.classList.add("emphasis-main");
-        messageSad.innerText = ":(";
-        
-        var messageTitle = document.createElement("h2");
-        messageTitle.innerText = "NO ERES MIEMBRO DE ESTE GRUPO";
-        messageTitle.style.color = "black";
-
-        var messageLine = document.createElement("hr");
-        messageLine.classList.add("line-break", "bottom-space", "top-space");
-
-        var buttonsCont = document.createElement("div");
-        buttonsCont.classList.add("input-button-group");
-
-        var buttonCancel = document.createElement("input");
-        buttonCancel.setAttribute("type", "button");
-        buttonCancel.setAttribute("value", "CANCEL");
-        buttonCancel.classList.add("_button-cancel");
-
-        var buttonJoin = document.createElement("input");
-        buttonJoin.setAttribute("type", "button");
-        buttonJoin.setAttribute("value", "JOIN");
-        buttonJoin.classList.add("_button-join");
-        buttonJoin.style.background = "rgb(0,122,255)";
-        buttonJoin.style.color = "white";
-
-        buttonsCont.append(buttonCancel, buttonJoin);
-        document.querySelector(".allTasks").innerHTML = "";
-        document.querySelector(".allTasks").append(messageSad, messageTitle, messageLine, buttonsCont)
-      }
-
-
-      function returnTaskElement(taskData, groupName, isCompact){
-        var taskElement = document.createElement("div");
-        taskElement.classList.add("task");
-
-        var taskStatus = document.createElement("i");
-        taskStatus.classList.add("material-icons", "task-status");
-        if(taskData.data()['COMPLETED'].some(function(element){ return element == firebase.auth().currentUser.email })){
-          taskStatus.innerText = "check_box"
-        } else {
-          taskStatus.innerText = "check_box_outline_blank"
-        }
-        var taskContent = document.createElement("div");
-        taskContent.classList.add("task-content");
-
-        var taskContentGroup = document.createElement("div");
-        taskContentGroup.classList.add("task-content_LIST");
-        taskContentGroup.innerText = groupName;
-
-
-        var taskContentContent = document.createElement("div");
-        taskContentContent.classList.add("task-content_CONTENT");
-        taskContentContent.innerText = taskData.data()['CONTENT'];
-
-        var taskMeta = document.createElement("div");
-        taskMeta.classList.add("task-meta");
-
-        var taskMetaComments = document.createElement("div");
-        taskMetaComments.classList.add("task-meta_COMMENTS");
-        //taskMetaComments.innerHTML = "<i class='material-icons'>comment</i> " + taskData['COMMENTS'].length;
-
-        var taskMetaCompletions = document.createElement("div");
-        taskMetaCompletions.classList.add("task-meta_COMPLETIONS");
-        taskMetaCompletions.innerHTML = "<i class='material-icons'>check</i> "+taskData.data()['COMPLETED'].length;
-
-        var taskMetaDate = document.createElement("div");
-        taskMetaDate.classList.add("task-meta_DATE");
-        taskMetaDate.innerHTML = "<i class='material-icons'>calendar_today</i> "+taskData.data()['DATE'];
-
-        taskMeta.append(taskMetaComments, taskMetaCompletions, taskMetaDate);
-        taskContent.append(taskContentGroup, taskContentContent);
-        if(!isCompact){
-          taskElement.append(taskStatus, taskContent, taskMeta);
-        } else {
-          taskElement.append(taskStatus, taskContent);
-          taskElement.classList.add("task-compact");
-        }
-        
-        taskElement.addEventListener("click", function(e){
-          returnTaskModalDialog(taskData, groupName)
-          showModalDialog(".modal-task");
-          e.stopImmediatePropagation()
-        });
-        return taskElement;
-      }
-
-      function returnTaskModalDialog(taskData, groupName){
-        document.querySelector(".modal-task .modal-content").innerHTML = "";
-        var taskCompleted = document.createElement("div");
-        taskCompleted.classList.add("modal-task_COMPLETED");
-        taskData.data()['COMPLETED'].forEach(function(item){
-          var taskCompletedUser = document.createElement("div");
-          taskCompletedUser.innerText = item;
-          taskCompleted.append(taskCompletedUser)
-        })
-        var taskComments = document.createElement("div");
-        taskComments.classList.add("modal-task_COMMENTS");
-        taskData.ref.collection('COMMENTS').orderBy("DATE", "asc").onSnapshot(function(data){
-          document.querySelector(".modal-task_COMMENTS").innerHTML = "";
-          data.forEach(function(item){
-            var taskCommentsComment = document.createElement("div");
-            taskCommentsComment.classList.add("modal-task_COMMENTS_item");
-
-            var taskCommentsCommentAuthor = document.createElement("div");
-            taskCommentsCommentAuthor.classList.add("modal-task_COMMENTS_item-author");
-            taskCommentsCommentAuthor.innerText = item.data()['AUTHOR'];
-
-            var taskCommentsCommentContent = document.createElement("div");
-            taskCommentsCommentContent.classList.add("modal-task_COMMENTS_item-content");
-            taskCommentsCommentContent.innerText = item.data()['CONTENT'];
-
-            if(item.data()['AUTHOR'] == firebase.auth().currentUser.email){
-              taskCommentsComment.style.alignSelf = "flex-end"
-            } else {
-              taskCommentsComment.style.alignSelf = "flex-start"
-            }
-
-            taskCommentsComment.append(taskCommentsCommentAuthor, taskCommentsCommentContent);
-            taskComments.append(taskCommentsComment)
+            groupElement.append(groupTitle, groupDescription)
+            document.querySelector(".allGroups").append(groupElement)
           })
         })
-
-        var taskToolbar = document.createElement("div");
-        taskToolbar.classList.add("modal-task_TOOLBAR");
-        var taskToolbarInput = document.createElement("input");
-        taskToolbarInput.setAttribute("type", "text");
-        taskToolbarInput.setAttribute("placeholder", "NUEVO COMENTARIO");
-        taskToolbarInput.setAttribute("required", "true");
-        taskToolbarInput.classList.add("input-text", "_input-newComment");
-        taskToolbarInput.style.fontSize = "24px";
-        var taskToolbarButton = document.createElement("input");
-        taskToolbarButton.setAttribute("type", "button");
-        taskToolbarButton.setAttribute("value", "send");
-        taskToolbarButton.classList.add("material-icons", "_button-sendComment");
-        taskToolbarButton.style.background = "rgb(0,122,255)";
-        taskToolbarButton.style.color = "white";
-        taskToolbarButton.addEventListener("click", function(){
-          addCommentToTask(taskData.ref.path)
-        })
-        console.log(taskData.ref.path)
-        taskToolbar.append(taskToolbarInput, taskToolbarButton);
-        document.querySelector(".modal-task .modal-content").append(returnTaskElement(taskData, groupName, true), taskCompleted, taskComments, taskToolbar);
       }
-
-
-      function showModalDialog(modalID){
-        document.querySelectorAll(".app").forEach(function(item){
-          item.classList.add("modal-isopen");
-        }) 
-        document.querySelector(modalID).style.display = "flex";
-        document.querySelector(".fab").style.display = "none";
-      }  
-      function hideModalDialog(){
-        document.querySelectorAll(".app").forEach(function(item){
-          item.classList.remove("modal-isopen");
-        })
-        document.querySelectorAll(".modal").forEach(function(item){
-          item.style.display = "none";
-        })
-        document.querySelector(".fab").style.display = "flex";
-      }
-      
-      
 
     </script>
   </body>
