@@ -124,7 +124,8 @@
         align-items: center;
         padding: 8px;
         width: 100%;
-        box-sizing: border-box
+        box-sizing: border-box;
+        max-width: 1020px;
       }
       .app-toolbar .group-description{
         margin: 8px;
@@ -594,7 +595,7 @@
     
     
     <script>
-      var URLGroupID = "SAMPLE";
+      var URLGroupID = window.location.search.substring(1).split("=")[1]
         // Initialize Firebase
       var config = {
         apiKey: "AIzaSyDlqcRMOR7P4PeKnnY3-6OEjMHZ2xnG3bc",

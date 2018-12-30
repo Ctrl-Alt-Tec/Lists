@@ -449,7 +449,20 @@
         </div>
     </div>
 
-    
+    <div class="modal modal-add">
+      <div class="modal-header">
+        <span class="modal-header-title">NUEVO GRUPO</span>
+        <i class="material-icons modal-header-close">close</i>
+      </div>
+      <div class="modal-content">
+        <input type="text" class="input-text transparent _input-newGroupName" required="true" style="font-size: 32px;" placeholder="NOMBRE">
+        <input type="text" class="input-text _input-newGroupDesc" required="true" style="font-size: 24px;" placeholder="DESCRIPCION">
+        <div class="input-button-group">
+          <input type="button" class="" value="CANCELAR">
+          <input type="button" class="material-icons _button-addGroup" value="add" style="background: rgb(0,122,255); color: white">
+        </div>
+      </div>
+    </div>
    
 
     <div class="fab">
@@ -459,7 +472,7 @@
     
     
     <script>
-      var URLGroupID = "SAMPLE";
+      
         // Initialize Firebase
       var config = {
         apiKey: "AIzaSyDlqcRMOR7P4PeKnnY3-6OEjMHZ2xnG3bc",
@@ -478,7 +491,53 @@
           getGroups()
         }
       })
-      
+      showModalDialog(".modal-add");
+      document.querySelector(".app.modal-isopen").addEventListener("click", hideModalDialog);
+      hideModalDialog();
+      document.querySelector(".fab").addEventListener("click", function(){showModalDialog(".modal-add")})
+      document.querySelector("._button-addGroup").addEventListener("click", addGroup)
+
+
+      function addGroup(){
+        var newGroupName = document.querySelector("._input-newGroupName").value;
+        var newGroupDesc = document.querySelector("._input-newGroupDesc").value;
+        firebase.firestore().collection("listsGroups").add({
+          NAME: newGroupName,
+          DESCRIPTION: newGroupDesc,
+          MEMBERS: [firebase.auth().currentUser.email], 
+        }).then(function(docGroup){
+          firebase.firestore().doc(docGroup.path).collection("TASKS").add({
+            COMPLETED: [],
+            CONTENT: '(System) Created new group',
+            DATE: new Date()
+          }).then(function(docTask){
+            firebase.firestore().doc(docTask.path).collection("COMMENTS").add({
+              AUTHOR: 'SYSTEM',
+              CONTENT: '(System) Created new task',
+              DATE: new Date(),
+              TYPE: 'META',
+            })
+          })
+        })
+      }
+
+      function showModalDialog(modalID){
+        document.querySelectorAll(".app").forEach(function(item){
+          item.classList.add("modal-isopen");
+        }) 
+        document.querySelector(modalID).style.display = "flex";
+        document.querySelector(".fab").style.display = "none";
+      }  
+      function hideModalDialog(){
+        document.querySelectorAll(".app").forEach(function(item){
+          item.classList.remove("modal-isopen");
+        })
+        document.querySelectorAll(".modal").forEach(function(item){
+          item.style.display = "none";
+        })
+        document.querySelector(".fab").style.display = "flex";
+      }
+
       function getGroups(){
         firebase.firestore().collection("listsGroups").where("MEMBERS", "array-contains", firebase.auth().currentUser.email).onSnapshot(function(data){
           document.querySelector(".allGroups").innerHTML=""
@@ -494,7 +553,7 @@
 
             groupElement.append(groupTitle, groupDescription)
             groupElement.addEventListener("click", function(){
-              window.location.replace("group.html")
+              window.location.replace("group.html?group="+doc.id)
             })
             document.querySelector(".allGroups").append(groupElement)
           })
