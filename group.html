@@ -3,7 +3,7 @@
     
     
     <script src="https://www.gstatic.com/firebasejs/5.7.0/firebase.js"></script>
-    <title>CTRL+ALT+TEC Lists</title>
+    <title>CTRL+ALT+TEC Lists (v.1.0.1)</title>
     <meta name="viewport" content="width=device-width, initial-scale=0.75">
     <script src="https://www.gstatic.com/firebasejs/5.4.2/firebase.js"></script>
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons"
@@ -620,22 +620,28 @@
       } );
       showModalDialog(".modal-add");
       document.querySelector(".app.modal-isopen").addEventListener("click", function(e){
-        hideModalDialog()
         e.stopImmediatePropagation();
         e.stopPropagation();
+        e.preventDefault();
+        hideModalDialog()
       });
       hideModalDialog();
+      document.onkeydown = function(e){
+        if(e.key=='Escape'||e.key=='Esc'||e.keyCode==27){
+          hideModalDialog();
+        }
+      }
       document.querySelector(".fab").addEventListener("click", function(){showModalDialog(".modal-add")})
       document.querySelector("._button-addTaskToGroup").addEventListener("click", function(){addTaskToGroup(URLGroupID)})
       document.querySelector("._button-hideModalDialog").addEventListener("click", hideModalDialog);
       
 
       function getGroupData(groupID){
-        firebase.firestore().collection("listsGroups").doc(groupID).orderBy("DATE ").onSnapshot(function(doc){
+        firebase.firestore().collection("listsGroups").doc(groupID).onSnapshot(function(doc){
             document.querySelector("._group-TITLE").innerHTML = doc.data()['NAME'];
             document.querySelector("._group-DESCRIPTION").innerHTML = doc.data()['DESCRIPTION'];
             if(doc.data()['MEMBERS'].includes(firebase.auth().currentUser.email)){
-              doc.ref.collection("TASKS").onSnapshot(function(taskData){
+              doc.ref.collection("TASKS").orderBy("DATE", "desc").onSnapshot(function(taskData){
                 document.querySelector(".allTasks").innerHTML = "";
                 taskData.forEach(function(taskDoc){
                   document.querySelector(".allTasks").append(returnTaskElement(taskDoc, doc.data()['NAME']))
@@ -694,8 +700,10 @@
         }
       }
       function joinGroup(){
-        firebase.firestore().doc(groupID).update({
-          MEMBERS: FieldValue.arrayUnion(firebase.auth().currentUser.uid)
+        firebase.firestore().collection("listsGroups").doc(URLGroupID).update({
+          MEMBERS: firebase.firestore.FieldValue.arrayUnion(firebase.auth().currentUser.email)
+        }).then(function(){
+          getGroupData(URLGroupID)
         })
       }
 
@@ -793,9 +801,14 @@
         }
         
         taskElement.addEventListener("click", function(e){
-          returnTaskModalDialog(taskData, groupName)
-          showModalDialog(".modal-task");
-          e.stopImmediatePropagation()
+          if(document.querySelector(".modal-isopen")){
+            hideModalDialog();
+          }else{
+            e.stopImmediatePropagation();
+            e.stopPropagation(); 
+            returnTaskModalDialog(taskData, groupName);
+            showModalDialog(".modal-task");
+          }
         });
         return taskElement;
       }
