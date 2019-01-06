@@ -575,7 +575,7 @@
       <div class="modal-content">
         <textarea class="input-text _input-newTaskContent" required="true" style="font-size: 24px;"></textarea>
         <div class="input-button-group">
-          <input type="button" class="" value="CANCEL">
+          <input type="button" class="_button-hideModalDialog" value="CANCEL">
           <input type="button" class="material-icons _button-addTaskToGroup" value="add" style="background: rgb(0,122,255); color: white">
         </div>
       </div>
@@ -619,27 +619,31 @@
         e.preventDefault()
       } );
       showModalDialog(".modal-add");
-      document.querySelector(".app.modal-isopen").addEventListener("click", hideModalDialog);
+      document.querySelector(".app.modal-isopen").addEventListener("click", function(e){
+        hideModalDialog()
+        e.stopImmediatePropagation();
+        e.stopPropagation();
+      });
       hideModalDialog();
       document.querySelector(".fab").addEventListener("click", function(){showModalDialog(".modal-add")})
       document.querySelector("._button-addTaskToGroup").addEventListener("click", function(){addTaskToGroup(URLGroupID)})
-      document.querySelector(".button_hideModalDialog").addEventListener("click", hideModalDialog);
+      document.querySelector("._button-hideModalDialog").addEventListener("click", hideModalDialog);
       
 
       function getGroupData(groupID){
-        firebase.firestore().collection("listsGroups").doc(groupID).onSnapshot(function(doc){
-          if(doc.data()['MEMBERS'].includes(firebase.auth().currentUser.email)){
+        firebase.firestore().collection("listsGroups").doc(groupID).orderBy("DATE ").onSnapshot(function(doc){
             document.querySelector("._group-TITLE").innerHTML = doc.data()['NAME'];
             document.querySelector("._group-DESCRIPTION").innerHTML = doc.data()['DESCRIPTION'];
-            doc.ref.collection("TASKS").onSnapshot(function(taskData){
-              document.querySelector(".allTasks").innerHTML = "";
-              taskData.forEach(function(taskDoc){
-                document.querySelector(".allTasks").append(returnTaskElement(taskDoc, doc.data()['NAME']))
+            if(doc.data()['MEMBERS'].includes(firebase.auth().currentUser.email)){
+              doc.ref.collection("TASKS").onSnapshot(function(taskData){
+                document.querySelector(".allTasks").innerHTML = "";
+                taskData.forEach(function(taskDoc){
+                  document.querySelector(".allTasks").append(returnTaskElement(taskDoc, doc.data()['NAME']))
+                })
               })
-            })
-          } else {
-            returnJoinPrompt();            
-          }
+            } else {
+              returnJoinPrompt();            
+            }
         })
       }
       
@@ -655,6 +659,8 @@
             TYPE: 'INFO',
             AUTHOR: 'System'
           })
+          document.querySelector("._input-newTaskContent").value = "";
+          hideModalDialog();
         })
       }
       function addCommentToTask(refTask){
@@ -687,7 +693,11 @@
           })
         }
       }
-
+      function joinGroup(){
+        firebase.firestore().doc(groupID).update({
+          MEMBERS: FieldValue.arrayUnion(firebase.auth().currentUser.uid)
+        })
+      }
 
       function returnJoinPrompt(){
         var messageSad = document.createElement("div");
@@ -715,6 +725,7 @@
         buttonJoin.classList.add("_button-join");
         buttonJoin.style.background = "rgb(0,122,255)";
         buttonJoin.style.color = "white";
+        buttonJoin.addEventListener("click", joinGroup)
 
         buttonsCont.append(buttonCancel, buttonJoin);
         document.querySelector(".allTasks").innerHTML = "";
