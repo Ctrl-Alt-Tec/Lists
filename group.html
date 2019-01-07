@@ -525,7 +525,7 @@
     <div class='header'>
       <div class="header-top">
         <a href="http://ctrl-alt-tec.github.io/Website" style="margin-right: 8px"><img src='https://ctrl-alt-tec.github.io/Website/img/LOGO-INLINE.png' height="48px"/></a>
-        <img class="logo" src="logo.png">
+        <img class="logo" src="logo-name.png">
       </div>
       <div class="header-toolbar">
         <div class="header-toolbar-button link_index"><i class="material-icons">arrow_back</i></div>
@@ -626,11 +626,7 @@
         hideModalDialog()
       });
       hideModalDialog();
-      document.onkeydown = function(e){
-        if(e.key=='Escape'||e.key=='Esc'||e.keyCode==27){
-          hideModalDialog();
-        }
-      }
+      
       document.querySelector(".fab").addEventListener("click", function(){showModalDialog(".modal-add")})
       document.querySelector("._button-addTaskToGroup").addEventListener("click", function(){addTaskToGroup(URLGroupID)})
       document.querySelector("._button-hideModalDialog").addEventListener("click", hideModalDialog);
