@@ -3,8 +3,10 @@
     
     
     <script src="https://www.gstatic.com/firebasejs/5.7.0/firebase.js"></script>
-    <title>CTRL+ALT+TEC Lists</title>
+    <title>CTRL+ALT+TEC Lists (v.1.0.1)</title>
     <meta name="viewport" content="width=device-width, initial-scale=0.75">
+    <meta name=”apple-mobile-web-app-capable” content=”yes”>
+    <link rel="apple-touch-icon" href="/logo.png">
     <script src="https://www.gstatic.com/firebasejs/5.4.2/firebase.js"></script>
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons"
     rel="stylesheet">
@@ -16,7 +18,7 @@
       }
       .app.modal-isopen{
         filter: brightness(0.4) blur(16px);
-        position: fixed
+        overflow: hidden;
       }
       *{
         margin: 0;
@@ -40,13 +42,14 @@
         display: flex;
         flex-direction: column;
         background-color: snow;
-        align-items: center;
+        align-items: stretch;
         width: 100%;
-        min-height: 100%;
-        padding-bottom: 80px;
         box-sizing: border-box
       }
-    
+      .app{
+        flex-direction: row;
+        flex: 1
+      }
       .logo{
         height: 48px;
       }
@@ -105,16 +108,55 @@
         margin: 4px;
         border-radius: 32px;
         flex: 1;
-        font-size: 16px;
+        font-size: 24px;
         font-weight: 600;
         display: flex;
         align-items: center;
         justify-content: space-around;
-        background: lightslategray
+        background: darkslategray;
+        white-space: pre
       }
       .header-toolbar-button .material-icons{
         font-size: 32px !important;
       }
+      .link_index{
+        display: none
+      }
+      .app-sidebar{
+        flex-shrink: 0;
+        width: 417px;
+        background: snow;
+        display: flex;
+        flex-direction: column;
+        overflow: auto;
+        box-sizing: border-box
+      }
+      @media only screen and (max-width: 1020px){
+        .app-sidebar{
+          position: fixed;
+          width: 100%;
+          bottom: 0;
+          top: 80px;
+          padding: 16px;
+          z-index: 10;
+        }
+        .header-toolbar{
+          width: 100%;
+          flex: none
+        }
+        .link_index{
+          display: flex
+        }
+        .group.active{
+          background: transparent !important
+        }
+      }
+      @media only screen and (min-width: 1020px){
+        .app-sidebar, .header-toolbar{
+          display: flex !important
+        }
+      }
+      /*1040*/
       .app-toolbar{
         /* position: sticky;
         top: 88px; */
@@ -124,7 +166,8 @@
         align-items: center;
         padding: 8px;
         width: 100%;
-        box-sizing: border-box
+        box-sizing: border-box;
+        max-width: 1020px;
       }
       .app-toolbar .group-description{
         margin: 8px;
@@ -143,7 +186,7 @@
         right: 32px;
         width: 80px;
         height: 80px;
-        background-color: #cdac00;
+        background-color: #00c41c;
         border-radius: 40px;
         display: flex;
         justify-content: center;
@@ -202,7 +245,8 @@
         overflow: auto;
         display: flex;
         flex-direction: column;
-        box-sizing: border-box
+        box-sizing: border-box;
+        align-self: center
       }
       .modal-header{
         display: flex;
@@ -215,6 +259,10 @@
         color: rgb(160,160,160);
         border-bottom: 1px solid rgb(160,160,160);
         font-size: 24px;
+        flex-shrink: 0
+      }
+      .modal-content{
+        overflow: auto
       }
 
       h1{
@@ -225,7 +273,7 @@
         color: white;
         width: 100%;
         box-sizing: border-box;
-        text-align: left
+        text-align: center
       }
       h2{
         font-family: 'Source Sans Pro', sans-serif;
@@ -257,41 +305,130 @@
         color: rgb(160,160,160);
         font-weight: 800
       }
-      .tag{
-        margin: 4px;
-        padding: 8px 16px;
-        font-family: 'Source Sans Pro', sans-serif;
-        font-size: 24px;
-        font-weight: 600;
-        background-color: rgb(0,122,245);
+      .group{
         display: flex;
-        border-radius: 24px; 
-        color: white
-      }
-
-      .line-break{
-        height: 0px;
-        width: 100%;
-        margin: 0px !important;
-      }
-      .line-break.bottom-space{
-        margin-bottom: 8px !important;
-      }
-      .line-break.top-space{
-        margin-top: 8px !important;
-      }
-
-      .group_TITLE{
+        padding: 16px;
+        flex-direction: column;
         font-family: 'Source Sans Pro', sans-serif;
+        border-bottom: 0.5px solid rgb(240, 240, 240)
+      }
+      .group.active{
+        background: #00c41c
+      }
+      .group .group_TITLE{
         font-weight: 800;
-        font-size: 32px
+        font-size: 24;
       }
-      .group_DESCRIPTION{
+      .group .group_DESCRIPTION{
+        font-size: 16px;
+      }
+      .allGroups{
+        flex-grow: 1;
+        overflow: auto
+      }
+      .allTasks{
+        overflow-y: auto;
+        background: white;
+        padding-bottom: 160px
+      }
+      .task{
+        display: flex;
+        flex-direction: row;
+        padding: 8px 4px;
+        width: 100%;
+        max-width: 1020px;
+        align-items: center;
         font-family: 'Source Sans Pro', sans-serif;
-        font-weight: 400;
-        font-size: 24px
+        border-bottom: 0.5px solid rgb(200,200,200);
+        box-sizing: border-box;
+        flex-shrink: 0
       }
-
+      .task.task-compact{
+        border: none
+      }
+      .task>*{
+        padding: 8px;
+      }
+      .task .task-status.material-icons {
+        font-size: 32px;
+        margin-right: 8px; 
+      }
+      .task .task-content{
+        font-size: 24px;
+        padding: 8px;
+        font-weight: 600;
+        flex-grow: 1
+      }
+      .task .task-content .task-content_LIST{
+        font-weight: 800;
+        color: rgb(160,160,160)
+      }
+      .task .task-comments{
+        display: flex;
+        align-items: flex-end;
+        font-size: 24px;
+        color: rgb(80,80,80)
+      }
+      .modal-task{
+        max-height: 90%;
+      }
+      .modal-task .modal-content{
+        display: flex;
+        flex-direction: column;
+        flex-shrink: 5
+      }
+      .modal-task_COMPLETED{
+        padding: 8px;
+        display: flex;
+        flex-direction: row;
+        overflow-x: auto;
+        border-bottom: 1px solid rgb(200,200,200); 
+      }
+      .modal-task_COMPLETED * {
+        margin: 4px;
+        padding: 8px;
+        font-family: 'Source Sans Pro';
+        font-size: 18px;
+        border-radius: 16px;
+        background-color: rgb(200,200,200);
+      }
+      .modal-task_COMMENTS {
+        padding: 0px;
+        display: flex;
+        flex-direction: column;
+        overflow-y: auto;
+        flex-shrink: 5
+      }
+      .modal-task_COMMENTS_item{
+        margin: 8px;
+        padding: 8px;
+        background-color: rgb(240,240,240);
+        border-radius: 16px;
+        font-family: 'Source Sans Pro', sans-serif;
+        width: auto;
+        max-width: 80%;
+        font-size: 24px;
+      }
+      .modal-task_COMMENTS_item-author{
+        font-size: 16px;
+        font-weight: 600;
+        color: rgb(160,160,160);
+        flex: 1
+      }
+      .modal-task_TOOLBAR{
+        display: flex;
+        flex-direction: row;
+        padding-top: 8px;
+        margin-top: 8px;
+        border-top: 1px solid rgb(160,160,160);
+      }
+      .modal-info ._info-MEMBERS>*{
+        padding: 8px 0px;
+        margin: 8px;
+        font-family: 'Source Sans Pro', sans-serif;
+        font-size: 18px;
+        border-bottom: 1px solid rgb(200,200,200)
+      }
       .input-text{
         display: flex;
         width: -webkit-fill-available;
@@ -359,11 +496,13 @@
         background: rgb(240,240,240);
         border: none;
         border-radius: 16px;
+        
       }
       .input-button-group{
         display: flex;
         padding: 4px;
         width: 100%;
+        box-sizing: border-box
       }
       .input-button-group input[type="button"]{
         flex: 1
@@ -377,34 +516,106 @@
         <a href="http://ctrl-alt-tec.github.io/Website" style="margin-right: 8px"><img src='https://ctrl-alt-tec.github.io/Website/img/LOGO-INLINE.png' height="48px"/></a>
         <img class="logo" src="logo-name.png">
       </div>
-      
+      <div class="header-toolbar">
+        <div class="header-toolbar-button link_index" style="background: transparent"><i class="material-icons">arrow_back</i></div>
+        <h1 class="_group-TITLE">MARKETING</h1>
+        <div class="header-toolbar-button _group-info"><i class="material-icons">folder_shared</i></div>
+      </div>
     </div>
     
-    <div class="app">
-        <div class="app-toolbar">
-          <div class="group-description _group-DESCRIPTION"></div>
+    <div class="app modal-isopen">
+        <div class="app-sidebar">
+          <div class="allGroups"></div>
+          <input type="button" class="_newGroup material-icons" value="add"/>          
         </div>
-        <div class="app-section allGroups">
+        <div class="app-section allTasks">
           
-                   
+          <div class="task">
+            <i class="material-icons task-status">check_box</i>
+            <div class="task-content">
+              <div class="task-content_LIST">MARKETING</div>
+              <div class="task-content_CONTENT">Imprimir anuncios</div>
+            </div>
+            <div class="task-meta">
+              <span class="task-meta_COMMENTS"><i class="material-icons">check</i> 29</span>
+              <span class="task-meta_COMPLETIONS"><i class="material-icons">check</i> 29</span>
+              <span class="task-meta_DATE"><i class="material-icons">calendar_today</i> 29</span>
+            </div>
+          </div>
+          <div class="task">
+            <i class="material-icons task-status">check_box</i>
+            <div class="task-content">
+              <div class="task-content_LIST">MARKETING</div>
+              <div class="task-content_CONTENT">Imprimir anuncios</div>
+            </div>
+            <div class="task-meta">
+              <span class="task-meta_COMMENTS"><i class="material-icons">check</i> 29</span>
+              <span class="task-meta_COMPLETIONS"><i class="material-icons">check</i> 29</span>
+              <span class="task-meta_DATE"><i class="material-icons">calendar_today</i> 29</span>
+            </div>
+          </div>
+          
         </div>
     </div>
 
     <div class="modal modal-add">
       <div class="modal-header">
-        <span class="modal-header-title">NUEVO GRUPO</span>
+        <span class="modal-header-title">NUEVA TAREA</span>
         <i class="material-icons modal-header-close">close</i>
       </div>
       <div class="modal-content">
-        <input type="text" class="input-text transparent _input-newGroupName" required="true" style="font-size: 32px;" placeholder="NOMBRE">
-        <input type="text" class="input-text _input-newGroupDesc" required="true" style="font-size: 24px;" placeholder="DESCRIPCION">
+        <textarea class="input-text _input-newTaskContent" required="true" style="font-size: 24px;"></textarea>
         <div class="input-button-group">
-          <input type="button" class="" value="CANCELAR">
-          <input type="button" class="material-icons _button-addGroup" value="add" style="background: rgb(0,122,255); color: white">
+          <input type="button" class="_button-hideModalDialog" value="CANCELAR">
+          <input type="button" class="material-icons _button-addTaskToGroup" value="add" style="background: rgb(0,122,255); color: white">
         </div>
       </div>
     </div>
-   
+    <div class="modal modal-task">
+      <div class="modal-header">
+        <span class="modal-header-title">DETALLES</span>
+        <i class="material-icons modal-header-close">close</i>
+      </div>
+      <div class="modal-content"></div>
+    </div>
+    <div class="modal modal-info">
+      <div class="modal-header">
+        <span class="modal-header-title">ACERCA DE ESTE GRUPO</span>
+        <i class="material-icons modal-header-close">close</i>
+      </div>
+      <div class="modal-content">
+        <input class="input-text _info-TITLE" required="true" style="font-size: 40px; font-weight: 800; border: none" placeholder="Nombre"></input>
+        <textarea class="input-text _info-DESCRIPTION" required="true" style="font-size: 24px; border: none"></textarea>
+        <h3 style="padding: 8px">Vínculo para compartir</h3>
+        <input class="input-text _info-URL" required="true" style="font-size: 24px" disabled></input>
+        <h3 style="padding: 8px">Integrantes</h3>
+        <div class="_info-MEMBERS"></div>
+        <h3 style="padding: 8px">Añadir integrantes</h3>
+        <input class="input-text _info-new-member" required="true" style="font-size: 24px" placeholder="matrícula@itesm.mx"></input>
+        <h3 style="padding: 8px">Otras opciones</h3>
+        <input type="button" class="_info-leave" value="SALIR DEL GRUPO" style="color: rgb(255, 59, 48); margin-bottom: 16px; width: -webkit-fill-available">
+        <hr class="line-break bottom-space top-space">
+        <div class="input-button-group">
+          <input type="button" class="_button-hideModalDialog" value="CANCELAR">
+          <input type="button" class="_button-updateGroup" value="ACTUALIZAR" style="background: rgb(0,122,255); color: white">
+        </div>
+      </div>
+    </div>
+    <div class="modal modal-newgroup">
+        <div class="modal-header">
+          <span class="modal-header-title">NUEVO GRUPO</span>
+          <i class="material-icons modal-header-close">close</i>
+        </div>
+        <div class="modal-content">
+          <input type="text" class="input-text transparent _input-newGroupName" required="true" style="font-size: 32px;" placeholder="NOMBRE">
+          <input type="text" class="input-text _input-newGroupDesc" required="true" style="font-size: 24px;" placeholder="DESCRIPCION">
+          <div class="input-button-group">
+            <input type="button" class="" value="CANCELAR">
+            <input type="button" class="material-icons _button-addGroup" value="add" style="background: rgb(0,122,255); color: white">
+          </div>
+        </div>
+      </div>
+
 
     <div class="fab">
         <i class="material-icons" style="font-size: 64px;">add</i>
@@ -413,7 +624,7 @@
     
     
     <script>
-      
+      var URLGroupID = window.location.search.substring(1).split("=")[1]
         // Initialize Firebase
       var config = {
         apiKey: "AIzaSyDlqcRMOR7P4PeKnnY3-6OEjMHZ2xnG3bc",
@@ -429,45 +640,406 @@
         if(!user){
           window.location = "login.html"
         }else{
-          getGroups()
+          getGroups();
+          getGroupData(URLGroupID)
         }
       })
-      showModalDialog(".modal-add");
       document.onkeydown = function(e){
         if(e.key=='Escape'||e.key=='Esc'||e.keyCode==27){
           hideModalDialog();
         }
       }
-      document.querySelector(".app.modal-isopen").addEventListener("click", hideModalDialog);
+      showModalDialog(".modal-add");
+      document.querySelector(".app.modal-isopen").addEventListener("click", function(e){
+        e.stopImmediatePropagation();
+        e.stopPropagation();
+        e.preventDefault();
+        hideModalDialog()
+      });
       hideModalDialog();
+      hideSidebar();
+      document.querySelector(".link_index").addEventListener("click", showSidebar)
       document.querySelector(".fab").addEventListener("click", function(){showModalDialog(".modal-add")})
+      document.querySelector("._button-addTaskToGroup").addEventListener("click", function(){addTaskToGroup(URLGroupID)})
+      document.querySelector("._button-hideModalDialog").addEventListener("click", function(e){
+        e.stopImmediatePropagation()
+        e.stopPropagation()
+        e.preventDefault()
+        hideModalDialog()
+      });
+      document.querySelector("._button-updateGroup").addEventListener("click", updateGroup);
+      document.querySelector("._info-leave").addEventListener("click", leaveGroup);
       document.querySelector("._button-addGroup").addEventListener("click", addGroup)
+      document.querySelector("._newGroup").addEventListener("click", function(e){
+          e.stopImmediatePropagation()
+          e.stopPropagation()
+          e.preventDefault()
+          showModalDialog(".modal-newgroup")
+      })
+      
+      function getGroups(){
+        firebase.firestore().collection("listsGroups").where("MEMBERS", "array-contains", firebase.auth().currentUser.email).onSnapshot(function(data){
+          document.querySelector(".allGroups").innerHTML=""
+          data.forEach(function(doc){
+            var groupElement = document.createElement("div");
+            groupElement.classList.add("group");
+            if(doc.id == URLGroupID){
+              groupElement.classList.add("active");
+            }
+            var groupTitle = document.createElement("div");
+            groupTitle.classList.add("group_TITLE")
+            groupTitle.innerText = doc.data()['NAME'];
+            var groupDescription = document.createElement("div");
+            groupDescription.classList.add("group_DESCRIPTION")
+            groupDescription.innerText = doc.data()['DESCRIPTION'];
 
-
-      function addGroup(){
-        var newGroupName = document.querySelector("._input-newGroupName").value;
-        var newGroupDesc = document.querySelector("._input-newGroupDesc").value;
-        firebase.firestore().collection("listsGroups").add({
-          NAME: newGroupName,
-          DESCRIPTION: newGroupDesc,
-          MEMBERS: [firebase.auth().currentUser.email], 
-        }).then(function(docGroup){
-          firebase.firestore().doc(docGroup.path).collection("TASKS").add({
-            COMPLETED: [],
-            CONTENT: '(System) Created new group',
-            DATE: new Date()
-          }).then(function(docTask){
-            firebase.firestore().doc(docTask.path).collection("COMMENTS").add({
-              AUTHOR: 'SYSTEM',
-              CONTENT: '(System) Created new task',
-              DATE: new Date(),
-              TYPE: 'META',
+            groupElement.append(groupTitle, groupDescription)
+            groupElement.addEventListener("click", function(){
+              if(!document.querySelector(".modal-isopen")){
+                window.location.replace("index.html?group="+doc.id)
+              }
             })
+            document.querySelector(".allGroups").append(groupElement)
           })
         })
       }
 
+
+      function getGroupData(groupID){
+        firebase.firestore().collection("listsGroups").doc(groupID).onSnapshot(function(doc){
+            document.querySelector("._group-TITLE").innerHTML = doc.data()['NAME'];
+            document.querySelector("._group-info").innerHTML = doc.data()['MEMBERS'].length + " <i class='material-icons'>folder_shared</i>"
+            if(doc.data()['MEMBERS'].includes(firebase.auth().currentUser.email)){
+              document.querySelector("._group-info").addEventListener("click", function(){showModalDialog(".modal-info")})
+              document.querySelector("._info-TITLE").value = doc.data()['NAME'];
+              document.querySelector("._info-DESCRIPTION").value = doc.data()['DESCRIPTION'];
+              document.querySelector("._info-URL").value = "https://ctrl-alt-tec.github.io/Lists/index.html?group="+doc.id;
+              document.querySelector("._info-MEMBERS").innerHTML="";
+              doc.data()['MEMBERS'].forEach(function(item){
+                var member = document.createElement("div");
+                member.innerHTML = item
+                document.querySelector("._info-MEMBERS").append(member)
+              })
+              doc.ref.collection("TASKS").orderBy("DATE", "desc").onSnapshot(function(taskData){
+                document.querySelector(".allTasks").innerHTML = "";
+                taskData.forEach(function(taskDoc){
+                  document.querySelector(".allTasks").append(returnTaskElement(taskDoc, doc.data()['NAME']))
+                })
+              })
+            } else {
+              returnJoinPrompt();            
+            }
+        }, function(error){
+          document.querySelector("._group-TITLE").innerHTML = URLGroupID;
+          var messageSad = document.createElement("div");
+          messageSad.classList.add("emphasis-main");
+          messageSad.innerText = "?";
+          var messageTitle = document.createElement("h2");
+          messageTitle.innerText = "OCURRIÓ UN ERROR";
+          messageTitle.style.color = "black";
+          document.querySelector(".allTasks").innerHTML = "";
+          document.querySelector(".allTasks").append(messageSad, messageTitle)
+        })
+      }
+      function updateGroup(){
+        var groupTitle = document.querySelector("._info-TITLE").value;
+        var groupDescription = document.querySelector("._info-DESCRIPTION").value;
+        var groupNewMembers = document.querySelector("._info-new-member").value;
+        if(groupTitle && groupDescription && groupNewMembers){
+          firebase.firestore().collection("listGroups").doc(URLGroupID).update({
+            NAME: groupTitle,
+            DESCRIPTION: groupDescription,
+            MEMBERS: firebase.firestore.FieldValue.arrayUnion(groupNewMembers)
+          }).then(function(){
+            getGroupData(URLGroupID)
+          })
+        } else if (groupTitle && groupDescription){
+          firebase.firestore().collection("listGroups").doc(groupID).update({
+            NAME: groupTitle,
+            DESCRIPTION: groupDescription,
+          }).then(function(){
+            getGroupData(URLGroupID)
+          })
+        }
+        hideModalDialog();
+      }
+      function addTaskToGroup(groupID){
+        var newTaskContent = document.querySelector("._input-newTaskContent").value;
+        firebase.firestore().collection("listsGroups").doc(groupID).collection('TASKS').add({
+          CONTENT: newTaskContent,
+          DATE: new Date(),
+          COMPLETED: [],
+        }).then(function(doc){
+          firebase.firestore().doc(doc.path).collection('COMMENTS').doc().set({
+            CONTENT: 'Added task',
+            TYPE: 'INFO',
+            AUTHOR: 'System'
+          })
+          document.querySelector("._input-newTaskContent").value = "";
+          hideModalDialog();
+        })
+      }
+      function addCommentToTask(refTask){
+        var newComment = document.querySelector("._input-newComment").value;
+        firebase.firestore().doc(refTask).collection("COMMENTS").doc().set({
+          CONTENT: newComment,
+          AUTHOR: firebase.auth().currentUser.email,
+          TYPE: 'COMMENT',
+          DATE: new Date(),
+        });
+        document.querySelector("._input-newComment").value = ""
+      }
+
+      function toggleTaskStatus(refTask, currentStatus){
+        if(currentStatus == "complete"){
+          firebase.firestore().doc(refTask).get().then(function(doc){
+            var arrayComplete = doc.data()['COMPLETED'];
+            arrayComplete.splice(arrayComplete.indexOf(firebase.auth().currentUser.email), 1);
+            firebase.firestore().doc(refTask).update({
+              COMPLETED: arrayComplete
+            })
+          })
+        }else{
+          firebase.firestore().doc(refTask).get().then(function(doc){
+            var arrayComplete = doc.data()['COMPLETED'];
+            arrayComplete.push(firebase.auth().currentUser.email);
+            firebase.firestore().doc(refTask).update({
+              COMPLETED: arrayComplete
+            })
+          })
+        }
+      }
+      function addGroup(){
+        var newGroupName = document.querySelector("._input-newGroupName").value;
+        var newGroupDesc = document.querySelector("._input-newGroupDesc").value;
+        if(newGroupName && newGroupDesc){
+          firebase.firestore().collection("listsGroups").add({
+            NAME: newGroupName,
+            DESCRIPTION: newGroupDesc,
+            MEMBERS: [firebase.auth().currentUser.email], 
+          }).then(function(docGroup){
+            firebase.firestore().doc(docGroup.path).collection("TASKS").add({
+              COMPLETED: [],
+              CONTENT: '(System) Created new group',
+              DATE: new Date()
+            }).then(function(docTask){
+              firebase.firestore().doc(docTask.path).collection("COMMENTS").add({
+                AUTHOR: 'SYSTEM',
+                CONTENT: '(System) Created new task',
+                DATE: new Date(),
+                TYPE: 'META',
+              })
+            })
+            hideModalDialog()
+            window.location.replace("index.html?group="+docGroup.id)
+          })
+        }
+      }
+      function joinGroup(){
+        firebase.firestore().collection("listsGroups").doc(URLGroupID).update({
+          MEMBERS: firebase.firestore.FieldValue.arrayUnion(firebase.auth().currentUser.email)
+        }).then(function(){
+          getGroupData(URLGroupID)
+        })
+      }
+      function leaveGroup(){
+        //if(firebase.firestore)
+        if(window.confirm("¿Estás seguro de querer abandonar este grupo?")){
+          firebase.firestore().collection("listsGroups").doc(URLGroupID).update({
+            MEMBERS: firebase.firestore.FieldValue.arrayRemove(firebase.auth().currentUser.email)
+          }).then(function(groupData){
+            console.log(groupData)
+            getGroupData(URLGroupID)
+          })
+        }
+        hideModalDialog()
+      }
+
+      function returnJoinPrompt(){
+        var messageSad = document.createElement("div");
+        messageSad.classList.add("emphasis-main");
+        messageSad.innerText = ":(";
+        
+        var messageTitle = document.createElement("h2");
+        messageTitle.innerText = "NO ERES MIEMBRO DE ESTE GRUPO";
+        messageTitle.style.color = "black";
+
+        var messageLine = document.createElement("hr");
+        messageLine.classList.add("line-break", "bottom-space", "top-space");
+
+        var buttonsCont = document.createElement("div");
+        buttonsCont.classList.add("input-button-group");
+
+        var buttonCancel = document.createElement("input");
+        buttonCancel.setAttribute("type", "button");
+        buttonCancel.setAttribute("value", "CANCELAR");
+        buttonCancel.classList.add("_button-cancel");
+
+        var buttonJoin = document.createElement("input");
+        buttonJoin.setAttribute("type", "button");
+        buttonJoin.setAttribute("value", "UNIRSE");
+        buttonJoin.classList.add("_button-join");
+        buttonJoin.style.background = "rgb(0,122,255)";
+        buttonJoin.style.color = "white";
+        buttonJoin.addEventListener("click", joinGroup)
+
+        buttonsCont.append(buttonCancel, buttonJoin);
+        document.querySelector(".allTasks").innerHTML = "";
+        document.querySelector(".allTasks").append(messageSad, messageTitle, messageLine, buttonsCont)
+      }
+
+
+      function returnTaskElement(taskData, groupName, isCompact){
+        var taskElement = document.createElement("div");
+        taskElement.classList.add("task");
+        if(isCompact){
+          taskElement.classList.add("task-compact");          
+        }
+        var taskStatus = document.createElement("i");
+        taskStatus.classList.add("material-icons", "task-status");
+        if(taskData.data()['COMPLETED'].includes(firebase.auth().currentUser.email)){
+          taskStatus.innerText = "check_box";
+          taskStatus.addEventListener("click", function(e){
+            e.stopImmediatePropagation();
+            toggleTaskStatus(taskData.ref.path, 'complete')
+          })
+        } else {
+          taskStatus.innerText = "check_box_outline_blank";
+          taskStatus.addEventListener("click", function(e){
+            e.stopImmediatePropagation();
+            toggleTaskStatus(taskData.ref.path, 'notcomplete')
+          })
+        }
+        var taskContent = document.createElement("div");
+        taskContent.classList.add("task-content");
+
+        var taskContentGroup = document.createElement("div");
+        taskContentGroup.classList.add("task-content_LIST");
+        taskContentGroup.innerText = groupName;
+
+
+        var taskContentContent = document.createElement("div");
+        taskContentContent.classList.add("task-content_CONTENT");
+        taskContentContent.innerText = taskData.data()['CONTENT'];
+
+        
+        var taskComments = document.createElement("div");
+        taskComments.classList.add("task-comments");
+
+        firebase.firestore().doc(taskData.ref.path).collection('COMMENTS').get().then(function(data){
+          taskComments.innerHTML = data.size + "<i class='material-icons'>comment</i> "
+        });
+
+
+        var taskMetaCompletions = document.createElement("div");
+        taskMetaCompletions.classList.add("task-meta_COMPLETIONS");
+        taskMetaCompletions.innerHTML = "<i class='material-icons'>check</i> "+taskData.data()['COMPLETED'].length;
+
+        taskContent.append(taskContentGroup, taskContentContent);
+        taskElement.append(taskStatus, taskContent, taskComments);
+        
+        taskElement.addEventListener("click", function(e){
+          if(document.querySelector(".modal-isopen")){
+            hideModalDialog();
+          }else{
+            e.stopImmediatePropagation();
+            e.stopPropagation(); 
+            returnTaskModalDialog(taskData, groupName);
+            showModalDialog(".modal-task");
+          }
+        });
+        return taskElement;
+      }
+
+      function returnTaskModalDialog(taskData, groupName){
+        document.querySelector(".modal-task .modal-content").innerHTML = "";
+        var taskCompleted = document.createElement("div");
+        taskCompleted.classList.add("modal-task_COMPLETED");
+        taskData.data()['COMPLETED'].forEach(function(item){
+          var taskCompletedUser = document.createElement("div");
+          taskCompletedUser.innerText = item;
+          taskCompleted.append(taskCompletedUser)
+        })
+        var taskComments = document.createElement("div");
+        taskComments.classList.add("modal-task_COMMENTS");
+        taskData.ref.collection('COMMENTS').orderBy("DATE", "asc").onSnapshot(function(data){
+          document.querySelector(".modal-task_COMMENTS").innerHTML = "";
+          data.forEach(function(item){
+            var taskCommentsComment = document.createElement("div");
+            taskCommentsComment.classList.add("modal-task_COMMENTS_item");
+
+            var taskCommentsCommentAuthor = document.createElement("div");
+            taskCommentsCommentAuthor.classList.add("modal-task_COMMENTS_item-author");
+            taskCommentsCommentAuthor.innerText = item.data()['AUTHOR'];
+
+            var taskCommentsCommentContent = document.createElement("div");
+            taskCommentsCommentContent.classList.add("modal-task_COMMENTS_item-content");
+            taskCommentsCommentContent.innerText = item.data()['CONTENT'];
+
+            if(item.data()['AUTHOR'] == firebase.auth().currentUser.email){
+              taskCommentsComment.style.alignSelf = "flex-end"
+            } else {
+              taskCommentsComment.style.alignSelf = "flex-start"
+            }
+
+            taskCommentsComment.append(taskCommentsCommentAuthor, taskCommentsCommentContent);
+            taskComments.append(taskCommentsComment)
+          })
+        })
+
+        var taskToolbar = document.createElement("div");
+        taskToolbar.classList.add("modal-task_TOOLBAR");
+        var taskToolbarDelete = document.createElement("input");
+        taskToolbarDelete.setAttribute("type", "button");
+        taskToolbarDelete.setAttribute("value", "delete");
+        taskToolbarDelete.classList.add("material-icons", "_modal-delete");
+        taskToolbarDelete.style.color = "rgb(255,59,48)";
+        taskToolbarDelete.addEventListener("click", function(){
+          if(window.confirm("¿Seguro que quieres eliminar esta tarea?\nSe eliminará la tarea así como todos sus comentarios\nEsta acción no se puede deshacer")){
+            firebase.firestore().doc(taskData.ref.path).delete()
+            hideModalDialog()
+          }
+        })
+        var taskToolbarComplete = document.createElement("input");
+        taskToolbarComplete.setAttribute("type", "button");
+        taskToolbarComplete.setAttribute("value", "check");
+        taskToolbarComplete.classList.add("material-icons", "_modal-complete");
+        taskToolbarComplete.style.color = "rgb(40,205,65)";
+        taskToolbarComplete.addEventListener("click", function(){
+          if(!taskData.data()['COMPLETED'].includes(firebase.auth().currentUser.email)){
+            toggleTaskStatus(taskData.ref.path, "notcomplete")
+          }
+        })
+        var taskToolbarInput = document.createElement("input");
+        taskToolbarInput.setAttribute("type", "text");
+        taskToolbarInput.setAttribute("placeholder", "NUEVO COMENTARIO");
+        taskToolbarInput.setAttribute("required", "true");
+        taskToolbarInput.classList.add("input-text", "_input-newComment");
+        taskToolbarInput.style.fontSize = "24px";
+        var taskToolbarButton = document.createElement("input");
+        taskToolbarButton.setAttribute("type", "button");
+        taskToolbarButton.setAttribute("value", "send");
+        taskToolbarButton.classList.add("material-icons", "_button-sendComment");
+        taskToolbarButton.style.background = "rgb(0,122,255)";
+        taskToolbarButton.style.color = "white";
+        taskToolbarButton.addEventListener("click", function(){
+          addCommentToTask(taskData.ref.path)
+        })
+        taskToolbar.append(taskToolbarDelete, taskToolbarComplete, taskToolbarInput, taskToolbarButton);
+        document.querySelector(".modal-task .modal-content").append(returnTaskElement(taskData, groupName, true), taskCompleted, taskComments, taskToolbar);
+      }
+
+      function showSidebar(){
+        document.querySelector(".app-sidebar").style.display="flex";
+        document.querySelector(".header-toolbar").style.display="none";
+      }
+      function hideSidebar(){
+        document.querySelector(".app-sidebar").style.display="none";
+        document.querySelector(".header-toolbar").style.display="flex";
+      }
+
       function showModalDialog(modalID){
+        hideModalDialog()
         document.querySelectorAll(".app").forEach(function(item){
           item.classList.add("modal-isopen");
         }) 
@@ -483,28 +1055,8 @@
         })
         document.querySelector(".fab").style.display = "flex";
       }
-
-      function getGroups(){
-        firebase.firestore().collection("listsGroups").where("MEMBERS", "array-contains", firebase.auth().currentUser.email).onSnapshot(function(data){
-          document.querySelector(".allGroups").innerHTML=""
-          data.forEach(function(doc){
-            var groupElement = document.createElement("div");
-            groupElement.classList.add("card", "group");
-            var groupTitle = document.createElement("div");
-            groupTitle.classList.add("group_TITLE")
-            groupTitle.innerText = doc.data()['NAME'];
-            var groupDescription = document.createElement("div");
-            groupDescription.classList.add("group_DESCRIPTION")
-            groupDescription.innerText = doc.data()['DESCRIPTION'];
-
-            groupElement.append(groupTitle, groupDescription)
-            groupElement.addEventListener("click", function(){
-              window.location.replace("group.html?group="+doc.id)
-            })
-            document.querySelector(".allGroups").append(groupElement)
-          })
-        })
-      }
+      
+      
 
     </script>
   </body>
