@@ -5,7 +5,8 @@
     <script src="https://www.gstatic.com/firebasejs/5.7.0/firebase.js"></script>
     <title>CTRL+ALT+TEC Lists (v.1.2)</title>
     <meta name="viewport" content="width=device-width, initial-scale=0.75">
-    <meta name=”apple-mobile-web-app-capable” content=”yes”>
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
     <link rel="apple-touch-icon" href="logo.png">
     <script src="https://www.gstatic.com/firebasejs/5.4.2/firebase.js"></script>
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons"
@@ -131,31 +132,7 @@
         overflow: auto;
         box-sizing: border-box
       }
-      @media only screen and (max-width: 1020px){
-        .app-sidebar{
-          position: fixed;
-          width: 100%;
-          bottom: 0;
-          top: 80px;
-          padding: 16px;
-          z-index: 10;
-        }
-        .header-toolbar{
-          width: 100%;
-          flex: none
-        }
-        .link_index{
-          display: flex
-        }
-        .group.active{
-          background: transparent !important
-        }
-      }
-      @media only screen and (min-width: 1020px){
-        .app-sidebar, .header-toolbar{
-          display: flex !important
-        }
-      }
+      
       /*1040*/
       .app-toolbar{
         /* position: sticky;
@@ -318,10 +295,17 @@
       .group .group_TITLE{
         font-weight: 800;
         font-size: 24;
+        display: flex;
+        align-items: center
+      }
+      .group .group_TITLE.today{
+        font-size: 30px;
+        color: darkslategray
       }
       .group .group_DESCRIPTION{
         font-size: 16px;
       }
+
       .allGroups{
         flex-grow: 1;
         overflow: auto
@@ -507,6 +491,40 @@
       .input-button-group input[type="button"]{
         flex: 1
       }
+      @media only screen and (max-width: 1020px){
+        .app-sidebar{
+          position: fixed;
+          width: 100%;
+          bottom: 0;
+          top: 80px;
+          padding: 16px;
+          z-index: 10;
+        }
+        .header-toolbar{
+          width: 100%;
+          flex: none
+        }
+        .link_index{
+          display: flex
+        }
+        .group.active{
+          background: transparent !important
+        }
+        .group .group_TITLE{
+          font-size: 28px
+        }
+        .group .group_TITLE.today{
+          font-size: 32px
+        }
+        .group .group_DESCRIPTION{
+          font-size: 24px
+        }
+      }
+      @media only screen and (min-width: 1020px){
+        .app-sidebar, .header-toolbar{
+          display: flex !important
+        }
+      }
     </style>
     
   </head>
@@ -525,6 +543,8 @@
     
     <div class="app modal-isopen">
         <div class="app-sidebar">
+          <div class="group today-group"><div class="group_TITLE today"><i class="material-icons">today</i>Hoy</div></div>
+          <hr class="line-break space-above space-below">
           <div class="allGroups"></div>
           <input type="button" class="_newGroup material-icons" value="add"/>          
         </div>
@@ -659,6 +679,11 @@
       hideModalDialog();
       hideSidebar();
       document.querySelector(".link_index").addEventListener("click", showSidebar)
+      document.querySelector(".today-group").addEventListener("click", function(){
+        URLGroupID = ''
+        getGroupData(URLGroupID)
+        hideSidebar()
+      })
       document.querySelector(".fab").addEventListener("click", function(){showModalDialog(".modal-add")})
       document.querySelector("._button-addTaskToGroup").addEventListener("click", function(){addTaskToGroup(URLGroupID)})
       document.querySelector("._button-hideModalDialog").addEventListener("click", function(e){
@@ -679,7 +704,7 @@
       
       function getGroups(){
         firebase.firestore().collection("listsGroups").where("MEMBERS", "array-contains", firebase.auth().currentUser.email).onSnapshot(function(data){
-          document.querySelector(".allGroups").innerHTML=""
+          document.querySelector(".allGroups").innerHTML="";
           data.forEach(function(doc){
             var groupElement = document.createElement("div");
             groupElement.classList.add("group");
@@ -696,7 +721,13 @@
             groupElement.append(groupTitle, groupDescription)
             groupElement.addEventListener("click", function(){
               if(!document.querySelector(".modal-isopen")){
-                window.location.replace("index.html?group="+doc.id)
+                document.querySelectorAll(".group").forEach(function(i){
+                i.classList.remove("active")
+                })
+                groupElement.classList.add("active")
+                URLGroupID = doc.id;
+                getGroupData(URLGroupID)
+                hideSidebar()
               }
             })
             document.querySelector(".allGroups").append(groupElement)
@@ -706,9 +737,35 @@
 
 
       function getGroupData(groupID){
-        firebase.firestore().collection("listsGroups").doc(groupID).onSnapshot(function(doc){
+        if(groupID == '' || groupID == 'TODAY' || groupID == undefined){
+          document.querySelector("._group-TITLE").innerHTML = 'Hoy';
+          document.querySelector("._group-info").innerHTML = "";
+          document.querySelector("._group-info").style.display = "none";
+          document.querySelector(".allTasks").innerHTML = "";
+          document.querySelectorAll(".group").forEach(function(i){
+            i.classList.remove("active")
+          })
+          document.querySelector(".today-group").classList.add("active")
+          document.querySelector(".fab").style.display = 'none !important';
+          firebase.firestore().collection("listsGroups").where("MEMBERS", "array-contains", firebase.auth().currentUser.email).get().then(function(data){
+            var arrayTasks = []
+            data.forEach(function(doc){
+              doc.ref.collection("TASKS").orderBy("DATE", "desc").onSnapshot(function(taskData){
+                taskData.forEach(function(taskDoc){
+                  if(!taskDoc.data()['COMPLETED'].includes(firebase.auth().currentUser.email)){
+                    document.querySelector(".allTasks").append(returnTaskElement(taskDoc, doc.data()['NAME']))              
+                  }
+                })
+              })
+            })
+          })
+
+        }else{
+          firebase.firestore().collection("listsGroups").doc(groupID).onSnapshot(function(doc){
+            document.querySelector(".fab").style.display = 'flex';
             document.querySelector("._group-TITLE").innerHTML = doc.data()['NAME'];
             document.querySelector("._group-info").innerHTML = doc.data()['MEMBERS'].length + " <i class='material-icons'>folder_shared</i>"
+            document.querySelector("._group-info").style.display = "flex";            
             if(doc.data()['MEMBERS'].includes(firebase.auth().currentUser.email)){
               document.querySelector("._group-info").addEventListener("click", function(){showModalDialog(".modal-info")})
               document.querySelector("._info-TITLE").value = doc.data()['NAME'];
@@ -729,17 +786,18 @@
             } else {
               returnJoinPrompt();            
             }
-        }, function(error){
-          document.querySelector("._group-TITLE").innerHTML = URLGroupID;
-          var messageSad = document.createElement("div");
-          messageSad.classList.add("emphasis-main");
-          messageSad.innerText = "?";
-          var messageTitle = document.createElement("h2");
-          messageTitle.innerText = "OCURRIÓ UN ERROR";
-          messageTitle.style.color = "black";
-          document.querySelector(".allTasks").innerHTML = "";
-          document.querySelector(".allTasks").append(messageSad, messageTitle)
-        })
+          }, function(error){
+            document.querySelector("._group-TITLE").innerHTML = URLGroupID;
+            var messageSad = document.createElement("div");
+            messageSad.classList.add("emphasis-main");
+            messageSad.innerText = "?";
+            var messageTitle = document.createElement("h2");
+            messageTitle.innerText = "OCURRIÓ UN ERROR";
+            messageTitle.style.color = "black";
+            document.querySelector(".allTasks").innerHTML = "";
+            document.querySelector(".allTasks").append(messageSad, messageTitle)
+          })
+        }
       }
       function updateGroup(){
         var groupTitle = document.querySelector("._info-TITLE").value;
@@ -754,7 +812,7 @@
             getGroupData(URLGroupID)
           })
         } else if (groupTitle && groupDescription){
-          firebase.firestore().collection("listGroups").doc(groupID).update({
+          firebase.firestore().collection("listGroups").doc(URLGroupID).update({
             NAME: groupTitle,
             DESCRIPTION: groupDescription,
           }).then(function(){
