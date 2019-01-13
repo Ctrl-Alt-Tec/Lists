@@ -3,7 +3,7 @@
     
     
     <script src="https://www.gstatic.com/firebasejs/5.7.0/firebase.js"></script>
-    <title>CTRL+ALT+TEC Lists (v.1.2)</title>
+    <title>CTRL+ALT+TEC Lists (v.1.2.1)</title>
     <meta name="viewport" content="width=device-width, initial-scale=0.75">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="default">
@@ -66,6 +66,7 @@
         align-items: center;
         align-content: center;
         position: sticky; 
+        position: -webkit-sticky;
         margin: 0;
         background-color: darkslategray;
         width: 100%;
@@ -681,6 +682,7 @@
       document.querySelector(".link_index").addEventListener("click", showSidebar)
       document.querySelector(".today-group").addEventListener("click", function(){
         URLGroupID = ''
+        history.pushState(null, '', 'index.html');
         getGroupData(URLGroupID)
         hideSidebar()
       })
@@ -726,6 +728,7 @@
                 })
                 groupElement.classList.add("active")
                 URLGroupID = doc.id;
+                history.pushState(null, '', 'index.html?group='+doc.id);
                 getGroupData(URLGroupID)
                 hideSidebar()
               }
