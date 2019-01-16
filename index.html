@@ -768,7 +768,8 @@
             document.querySelector(".fab").style.display = 'flex';
             document.querySelector("._group-TITLE").innerHTML = doc.data()['NAME'];
             document.querySelector("._group-info").innerHTML = doc.data()['MEMBERS'].length + " <i class='material-icons'>folder_shared</i>"
-            document.querySelector("._group-info").style.display = "flex";            
+            document.querySelector("._group-info").style.display = "flex";   
+            document.querySelector(".allTasks").innerHTML = "";                     
             if(doc.data()['MEMBERS'].includes(firebase.auth().currentUser.email)){
               document.querySelector("._group-info").addEventListener("click", function(){showModalDialog(".modal-info")})
               document.querySelector("._info-TITLE").value = doc.data()['NAME'];
