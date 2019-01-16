@@ -668,6 +668,15 @@
       document.onkeydown = function(e){
         if(e.key=='Escape'||e.key=='Esc'||e.keyCode==27){
           hideModalDialog();
+        }else if(e.keyCode== 78){
+          showModalDialog(".modal-add")
+        }else if(e.keyCode==76){
+          showSidebar()
+        }else if(e.keyCode==8){
+          e.preventDefault()
+          showSidebar()
+        }else if(e.keyCode==73){
+          showModalDialog(".modal-info")
         }
       }
       showModalDialog(".modal-add");
@@ -751,11 +760,13 @@
           document.querySelector(".today-group").classList.add("active")
           document.querySelector(".fab").style.display = 'none !important';
           firebase.firestore().collection("listsGroups").where("MEMBERS", "array-contains", firebase.auth().currentUser.email).get().then(function(data){
+            document.querySelector(".allTasks").innerHTML = "";
             var arrayTasks = []
             data.forEach(function(doc){
               doc.ref.collection("TASKS").orderBy("DATE", "desc").onSnapshot(function(taskData){
                 taskData.forEach(function(taskDoc){
                   if(!taskDoc.data()['COMPLETED'].includes(firebase.auth().currentUser.email)){
+                    arrayTasks.push({doc: taskDoc, group: doc.data()['NAME']})
                     document.querySelector(".allTasks").append(returnTaskElement(taskDoc, doc.data()['NAME']))              
                   }
                 })
