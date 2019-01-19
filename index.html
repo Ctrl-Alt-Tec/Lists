@@ -342,11 +342,23 @@
         font-size: 24px;
         padding: 8px;
         font-weight: 600;
-        flex-grow: 1
+        flex-grow: 1;
       }
       .task .task-content .task-content_LIST{
         font-weight: 800;
         color: rgb(160,160,160)
+      }
+      .task .task-content .task-content_CONTENT{
+        line-height: 1
+      }
+      .task .task-content .task-content_DUE{
+        margin-right: 4px;
+        padding: 4px;
+        font-size: 16px;
+        border-radius: 4px;
+        background-color: rgb(0,122,255);
+        color: white;
+        float: left;
       }
       .task .task-comments{
         display: flex;
@@ -586,6 +598,7 @@
       </div>
       <div class="modal-content">
         <textarea class="input-text _input-newTaskContent" required="true" style="font-size: 24px;"></textarea>
+        <input type="date" class="input-text _input-newTaskDue" required="true" placeholder="FECHA" style="font-size: 24px; font-weight: 600;"></input>
         <div class="input-button-group">
           <input type="button" class="_button-hideModalDialog" value="CANCELAR">
           <input type="button" class="material-icons _button-addTaskToGroup" value="add" style="background: rgb(0,122,255); color: white">
@@ -668,14 +681,14 @@
       document.onkeydown = function(e){
         if(e.key=='Escape'||e.key=='Esc'||e.keyCode==27){
           hideModalDialog();
-        }else if(e.keyCode== 78){
+        }else if(e.keyCode== 78 && document.activeElement.tagName == "BODY"){
           showModalDialog(".modal-add")
-        }else if(e.keyCode==76){
+        }else if(e.keyCode==76 && document.activeElement.tagName == "BODY"){
           showSidebar()
-        }else if(e.keyCode==8){
+        }else if(e.keyCode==8 && document.activeElement.tagName == "BODY"){
           e.preventDefault()
           showSidebar()
-        }else if(e.keyCode==73){
+        }else if(e.keyCode==73 && document.activeElement.tagName == "BODY"){
           showModalDialog(".modal-info")
         }
       }
@@ -748,7 +761,8 @@
       }
 
 
-      function getGroupData(groupID){
+      async function getGroupData(groupID){
+        var arrayTasks = []
         if(groupID == '' || groupID == 'TODAY' || groupID == undefined){
           document.querySelector("._group-TITLE").innerHTML = 'Hoy';
           document.querySelector("._group-info").innerHTML = "";
@@ -761,19 +775,22 @@
           document.querySelector(".fab").style.display = 'none !important';
           firebase.firestore().collection("listsGroups").where("MEMBERS", "array-contains", firebase.auth().currentUser.email).get().then(function(data){
             document.querySelector(".allTasks").innerHTML = "";
-            var arrayTasks = []
+            arrayTasks = []
             data.forEach(function(doc){
-              doc.ref.collection("TASKS").orderBy("DATE", "desc").onSnapshot(function(taskData){
+              doc.ref.collection("TASKS").orderBy("DATE", "desc").get().then(function(taskData){
                 taskData.forEach(function(taskDoc){
                   if(!taskDoc.data()['COMPLETED'].includes(firebase.auth().currentUser.email)){
-                    arrayTasks.push({doc: taskDoc, group: doc.data()['NAME']})
+                    arrayTasks.push({doc: taskDoc, group: doc.data()['NAME'], due: taskDoc.data()['DUE'], date: taskDoc.data()['DATE'].toMillis()})
                     document.querySelector(".allTasks").append(returnTaskElement(taskDoc, doc.data()['NAME']))              
                   }
                 })
+              }).then(function(){
+                return arrayTasks.sort(function(a,b){return a.due - b.due}).sort(function(a,b){return b.date - a.date})
               })
             })
+          }).then(function(data){
+            console.log(arrayTasks.length)
           })
-
         }else{
           firebase.firestore().collection("listsGroups").doc(groupID).onSnapshot(function(doc){
             document.querySelector(".fab").style.display = 'flex';
@@ -838,10 +855,12 @@
       }
       function addTaskToGroup(groupID){
         var newTaskContent = document.querySelector("._input-newTaskContent").value;
+        var newTaskDue = document.querySelector("._input-newTaskDue").value;
         firebase.firestore().collection("listsGroups").doc(groupID).collection('TASKS').add({
           CONTENT: newTaskContent,
           DATE: new Date(),
           COMPLETED: [],
+          DUE: new Date(newTaskDue)
         }).then(function(doc){
           firebase.firestore().doc(doc.path).collection('COMMENTS').doc().set({
             CONTENT: 'Added task',
@@ -994,13 +1013,19 @@
         var taskContentContent = document.createElement("div");
         taskContentContent.classList.add("task-content_CONTENT");
         taskContentContent.innerText = taskData.data()['CONTENT'];
+        if(taskData.data()['DUE'] != undefined){
+          var taskContentDue = document.createElement("div");
+          taskContentDue.classList.add("task-content_DUE");
+          taskContentDue.innerText = taskData.data()['DUE'].toDate().toLocaleDateString();
+          taskContentContent.prepend(taskContentDue)
+        }
 
         
         var taskComments = document.createElement("div");
         taskComments.classList.add("task-comments");
 
         firebase.firestore().doc(taskData.ref.path).collection('COMMENTS').get().then(function(data){
-          taskComments.innerHTML = data.size + "<i class='material-icons'>comment</i> "
+          taskComments.innerHTML = data.size-1 + "<i class='material-icons'>comment</i> "
         });
 
 
