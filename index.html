@@ -18,7 +18,7 @@
         font-family: 'Material Icons' !important;
       }
       .app.modal-isopen{
-        filter: brightness(0.4) blur(16px);
+        filter: brightness(0.9) blur(16px);
         overflow: hidden;
       }
       *{
@@ -42,7 +42,7 @@
         margin: 0;
         display: flex;
         flex-direction: column;
-        background-color: snow;
+        background-color: whitesmoke;
         align-items: stretch;
         width: 100%;
         box-sizing: border-box
@@ -68,7 +68,6 @@
         position: sticky; 
         position: -webkit-sticky;
         margin: 0;
-        background-color: darkslategray;
         width: 100%;
         padding: 0px;
         font-family: 'Arial';
@@ -76,7 +75,10 @@
         top: 0; 
         box-sizing: border-box;
         justify-content: space-between;
-        flex-wrap: wrap
+        flex-wrap: wrap;
+        -webkit-app-region: drag;
+        box-shadow: 0px 1px 3px rgba(0,0,0,0.12), 0px 1px 2px rgba(0,0,0,0.24);
+        background: white
       }
       .header>*{
         display: flex;
@@ -99,11 +101,9 @@
         width: 100%;
         /*max-width: 658px; --this is an exception */
         padding: 8px; /* --this is an exception*/
-        margin: 0px; /* --this is an exception*/
-        
+        margin: 0px; /* --this is an exception*/ 
         box-sizing: border-box;
-        color: white; 
-        background-color: lightslategray
+        background-color: white;
       }
       .header-toolbar-button{
         padding: 16px;
@@ -115,8 +115,9 @@
         display: flex;
         align-items: center;
         justify-content: space-around;
-        background: darkslategray;
-        white-space: pre
+        background: rgb(240,240,240);
+        white-space: pre;
+        color: #000;
       }
       .header-toolbar-button .material-icons{
         font-size: 32px !important;
@@ -127,7 +128,7 @@
       .app-sidebar{
         flex-shrink: 0;
         width: 417px;
-        background: snow;
+        background: whitesmoke;
         display: flex;
         flex-direction: column;
         overflow: auto;
@@ -224,7 +225,8 @@
         display: flex;
         flex-direction: column;
         box-sizing: border-box;
-        align-self: center
+        align-self: center;
+        box-shadow: 0 3px 6px rgba(0,0,0,0.16), 0 3px 6px rgba(0,0,0,0.23);
       }
       .modal-header{
         display: flex;
@@ -248,10 +250,10 @@
         font-family: 'Source Sans Pro', sans-serif;
         font-size: 48px;
         font-weight: 800;
-        color: white;
         width: 100%;
         box-sizing: border-box;
-        text-align: center
+        text-align: center;
+        color: black
       }
       h2{
         font-family: 'Source Sans Pro', sans-serif;
@@ -314,7 +316,8 @@
       .allTasks{
         overflow-y: auto;
         background: white;
-        padding-bottom: 160px
+        padding-bottom: 160px;
+        box-shadow:  0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24);
       }
       .task{
         display: flex;
@@ -509,13 +512,16 @@
           position: fixed;
           width: 100%;
           bottom: 0;
-          top: 80px;
+          top: 0px;
           padding: 16px;
           z-index: 10;
         }
         .header-toolbar{
           width: 100%;
-          flex: none
+          flex: none;
+        }
+        .header-top{
+          display: none
         }
         .link_index{
           display: flex
@@ -557,7 +563,6 @@
     <div class="app modal-isopen">
         <div class="app-sidebar">
           <div class="group today-group"><div class="group_TITLE today"><i class="material-icons">today</i>Hoy</div></div>
-          <hr class="line-break space-above space-below">
           <div class="allGroups"></div>
           <input type="button" class="_newGroup material-icons" value="add"/>          
         </div>
@@ -785,7 +790,7 @@
                   }
                 })
               }).then(function(){
-                return arrayTasks.sort(function(a,b){return a.due - b.due}).sort(function(a,b){return b.date - a.date})
+                return arrayTasks.sort(function(a,b){return b.due - a.due}).sort(function(a,b){return b.date - a.date})
               })
             })
           }).then(function(data){
