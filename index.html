@@ -12,7 +12,9 @@
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons"
     rel="stylesheet">
     <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:400,600,800,900" rel="stylesheet">
+    <link href="https://jacoduplessis.github.io/calendar/dist/calendar.css" rel="stylesheet">
     <script src="https://apis.google.com/js/api.js"></script>
+    <script src="https://jacoduplessis.github.io/calendar/dist/calendar.js"></script>
     <style>
       .material-icons{
         font-family: 'Material Icons' !important;
@@ -177,7 +179,8 @@
         flex-direction: column;
         align-items: center;
         width: 100%;
-        box-sizing: border-box
+        box-sizing: border-box;
+        flex: 1;
       }
 
       .card{
@@ -555,6 +558,51 @@
           display: flex !important
         }
       }
+      #calendar{
+        width: 100%;
+        max-width: 1020px
+      }
+      .entry{
+        font-size: 16px !important;
+        background: rgb(0,122,255) !important;
+        border-radius: 8px
+      }
+      .row-content[svelte-3638396833]{
+        border-radius: 8px;
+        background: whitesmoke; 
+        margin: 4px 0px
+      }
+      .row-content[svelte-3638396833] p *{
+        font-size: 18px !important; 
+      }
+      .day-number{
+        padding: 4px;
+        font-size: 24px;
+        font-weight: 800;
+        color: rgb(160,160,160);
+      }
+      th[svelte-3638396833], td[svelte-3638396833]{
+        border: none;
+        border-bottom: 0.5px solid rgba(220,220,220) !important
+      }
+      td[svelte-3638396833], .row-header[svelte-3638396833]{
+        padding: 8px;
+        font-size: 24px;
+        font-weight: 600;
+        background: transparent;
+        margin-top: 16px;
+        border-top: 1px solid rgb(160,160,160)
+      }
+      th[svelte-3638396833]{
+        padding: 8px;
+        font-size: 18px;
+        font-weight: 800;
+        text-transform: uppercase;
+        background: transparent
+      }
+      .today .day-number{
+        color: black
+      }
     </style>
     
   </head>
@@ -574,10 +622,11 @@
     <div class="app modal-isopen">
         <div class="app-sidebar">
           <div class="group today-group"><div class="group_TITLE today"><i class="material-icons">today</i>Hoy</div></div>
+          <div class="group calendar-group"><div class="group_TITLE today"><i class="material-icons">date_range</i>Calendario</div></div>
           <div class="allGroups"></div>
           <input type="button" class="_newGroup material-icons" value="add"/>          
         </div>
-        <div class="app-section allTasks">
+        <div class="app-section allTasks" id="mainSection">
           
           <div class="task">
             <i class="material-icons task-status">check_box</i>
@@ -723,6 +772,12 @@
         history.pushState(null, '', 'index.html');
         getGroupData(URLGroupID)
         hideSidebar()
+      });
+      document.querySelector(".calendar-group").addEventListener("click", function(){
+        URLGroupID = 'CALENDAR'
+        history.pushState(null, '', 'index.html?group=CALENDAR');
+        getGroupData(URLGroupID)
+        hideSidebar()
       })
       document.querySelector(".fab").addEventListener("click", function(){showModalDialog(".modal-add")})
       document.querySelector("._button-addTaskToGroup").addEventListener("click", function(){addTaskToGroup(URLGroupID)})
@@ -779,33 +834,79 @@
 
       async function getGroupData(groupID){
         var arrayTasks = []
-        if(groupID == '' || groupID == 'TODAY' || groupID == undefined){
-          document.querySelector("._group-TITLE").innerHTML = 'Hoy';
+        var arrayTasksEvents = []
+        if(groupID == '' || groupID == 'TODAY' || groupID == undefined || groupID == 'CALENDAR'){
           document.querySelector("._group-info").innerHTML = "";
           document.querySelector("._group-info").style.display = "none";
           document.querySelector(".allTasks").innerHTML = "";
-          document.querySelectorAll(".group").forEach(function(i){
-            i.classList.remove("active")
-          })
-          document.querySelector(".today-group").classList.add("active")
           document.querySelector(".fab").style.display = 'none !important';
-          firebase.firestore().collection("listsGroups").where("MEMBERS", "array-contains", firebase.auth().currentUser.email).get().then(function(data){
-            document.querySelector(".allTasks").innerHTML = "";
+          if(groupID == '' || groupID == 'TODAY' || groupID == undefined){
+            document.querySelector("._group-TITLE").innerHTML = 'Hoy';
+            document.querySelectorAll(".group").forEach(function(i){
+              i.classList.remove("active")
+            })
+            document.querySelector(".today-group").classList.add("active")
+          }
+          else if(groupID=='CALENDAR'){
+            document.querySelectorAll(".group").forEach(function(i){
+              i.classList.remove("active")
+            })
+            document.querySelector(".calendar-group").classList.add("active")
+            document.querySelector("._group-TITLE").innerHTML = 'Calendario';
+            document.querySelector(".allTasks").innerHTML = '<div id="calendar"></div>';
+          }
+          var calendar = new Calendar({target: document.querySelector("#calendar"), data:{
+            previousText: "Antes",
+            nextText: "Siguiente",
+            calendarText: "Mes",
+            listText: 'Día',
+            entries: [],
+            showModal: false,
+            escape: false,
+            defaultColor: "#00c41c",
+            monthNames: ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'], 
+            dayNames: ['Lu', 'Mar', 'Mier', 'Jue', 'Vie', 'Sa', 'Do']
+          }})
+          calendar.on('entryClicked', function(e) {
+            returnTaskModalDialog(e.entry.content.doc, e.entry.content.group);
+            showModalDialog(".modal-task");
+            calendar.set({showModal: false})
+            document.querySelector("#calendar .modal").style.display="none";
+          })
+
+          firebase.firestore().collection("listsGroups").where("MEMBERS", "array-contains", firebase.auth().currentUser.email).onSnapshot(function(data){
+            //document.querySelector(".allTasks").innerHTML = "";
             arrayTasks = []
+            arrayTasksEvents = []
             data.forEach(function(doc){
               doc.ref.collection("TASKS").orderBy("DATE", "desc").get().then(function(taskData){
                 taskData.forEach(function(taskDoc){
                   if(!taskDoc.data()['COMPLETED'].includes(firebase.auth().currentUser.email)){
                     arrayTasks.push({doc: taskDoc, group: doc.data()['NAME'], due: taskDoc.data()['DUE'], date: taskDoc.data()['DATE'].toMillis()})
-                    document.querySelector(".allTasks").append(returnTaskElement(taskDoc, doc.data()['NAME']))              
+                    if(groupID=='CALENDAR' && taskDoc.data()['DUE']){
+                      var evtDate = taskDoc.data()['DUE'].toDate().toISOString();
+                      arrayTasksEvents.push({
+                        "start": evtDate,
+                        "title": "("+doc.data()['NAME']+")\n"+taskDoc.data()['CONTENT'],
+                        "color": "#8c2b0e",
+                        "id": 1,
+                        "content": {doc: taskDoc, group: doc.data()['NAME'], due: taskDoc.data()['DUE'], date: taskDoc.data()['DATE'].toMillis()},
+                        "all_day": true
+                      })
+                    }
                   }
                 })
               }).then(function(){
-                return arrayTasks.sort(function(a,b){return a.due - b.due}).sort(function(a,b){return b.date - a.date})
+                if(groupID!='CALENDAR'){
+                  document.querySelector(".allTasks").innerHTML = "";
+                  arrayTasks.sort(function(a,b){return a.due - b.due}).sort(function(a,b){return b.date - a.date}).forEach(function(item){
+                    document.querySelector(".allTasks").append(returnTaskElement(item.doc, item.group)  )           
+                  })
+                }else{
+                  calendar.set({entries: arrayTasksEvents})
+                }
               })
             })
-          }).then(function(data){
-            console.log(arrayTasks.length)
           })
         }else{
           firebase.firestore().collection("listsGroups").doc(groupID).onSnapshot(function(doc){
@@ -1165,7 +1266,9 @@
           item.classList.remove("modal-isopen");
         })
         document.querySelectorAll(".modal").forEach(function(item){
-          item.style.display = "none";
+          //if(item.parentElement.id != "calendar"){
+            item.style.display = "none";
+          //}
         })
         document.querySelector(".fab").style.display = "flex";
       }
